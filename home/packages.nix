@@ -11,8 +11,6 @@
       ripgrep
       gh
       zoxide
-      gnupg
-      pinentry_mac
 
       # fonts
       nerd-fonts.monaspace

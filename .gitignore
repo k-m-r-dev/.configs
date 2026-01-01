@@ -1,0 +1,10 @@
+# macOS
+.DS_Store
+
+# Nix
+result
+result-*
+
+# Editors
+.vscode/
+*.swp

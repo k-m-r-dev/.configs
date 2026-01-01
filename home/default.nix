@@ -4,6 +4,7 @@
     ./packages.nix
     ./git.nix
     ./shell.nix
+    ./gpg.nix
   ];
 
   home = {
