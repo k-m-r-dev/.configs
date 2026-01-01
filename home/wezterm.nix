@@ -11,7 +11,7 @@
       -- Appearance
       config.color_scheme = 'Catppuccin Mocha'
       config.font = wezterm.font('MonaspiceNe Nerd Font', { weight = 'Medium' })
-      config.font_size = 14.0
+      config.font_size = 12.0
       config.window_background_opacity = 0.92
       config.macos_window_background_blur = 30
       config.window_decorations = 'RESIZE'
