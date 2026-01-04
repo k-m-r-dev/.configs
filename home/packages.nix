@@ -14,6 +14,11 @@
       zoxide
       direnv
 
+      # languages runtimes
+      uv
+      nodejs_22
+      bun
+
       # fonts
       nerd-fonts.monaspace
     ];
