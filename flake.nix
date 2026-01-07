@@ -29,7 +29,7 @@
     let
       # TODO: replace with your username
       primaryUser = "khandkermahmudur";
-      hostName = "kmrfn.local";
+      hostName = "kmrfn";
     in
     {
       # build darwin flake using:
@@ -38,13 +38,10 @@
         system = "aarch64-darwin";
         modules = [
           ./darwin
-          ./hosts/kmrfn.local/configuration.nix
+          ./hosts/kmrfn/configuration.nix
         ];
         specialArgs = { inherit inputs self primaryUser hostName; };
       };
-
-      # Alias for short hostname (without .local)
-      darwinConfigurations.kmrfn = self.darwinConfigurations."${hostName}";
 
       # Expose the system for `nix build`
       packages.aarch64-darwin = {
