@@ -43,5 +43,7 @@
         specialArgs = { inherit inputs self primaryUser hostName; };
       };
 
+      # Expose the system for `nix build`
+      packages.aarch64-darwin.default = self.darwinConfigurations."${hostName}".system;
     };
 }
