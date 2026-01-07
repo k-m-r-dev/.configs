@@ -5,10 +5,10 @@
     userName = "Khandker Mahmudur Rahman";
     userEmail = "mahmudur.rahman@fieldnation.com";
 
-    # signing = {
-    #   key = "3832734CA36A92B9";
-    #   signByDefault = true;
-    # };
+    signing = {
+      key = "B87897B3E9596077";
+      signByDefault = true;
+    };
 
     lfs.enable = true;
 
