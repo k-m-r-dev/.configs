@@ -13,6 +13,7 @@
       gh
       zoxide
       direnv
+      kubectl
 
       # LLM CLIs
       pkgsMaster.opencode
