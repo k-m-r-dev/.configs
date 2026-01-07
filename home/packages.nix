@@ -5,8 +5,8 @@
       # dev tools
       curl
       neovim
-      helix
-      zellij
+      # helix
+      # zellij
       btop
       tree
       ripgrep

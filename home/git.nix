@@ -2,13 +2,13 @@
 {
   programs.git = {
     enable = true;
-    userName = "Tanjim H.";
-    userEmail = "contact@audacioustux.com";
+    userName = "Khandker Mahmudur Rahman";
+    userEmail = "mahmudur.rahman@fieldnation.com";
 
-    signing = {
-      key = "3832734CA36A92B9";
-      signByDefault = true;
-    };
+    # signing = {
+    #   key = "3832734CA36A92B9";
+    #   signByDefault = true;
+    # };
 
     lfs.enable = true;
 
@@ -16,7 +16,7 @@
 
     extraConfig = {
       github = {
-        user = "audacioustux";
+        user = "kmrfn";
       };
       push = {
         autoSetupRemote = true;

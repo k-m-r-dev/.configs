@@ -28,8 +28,8 @@
     }@inputs:
     let
       # TODO: replace with your username
-      primaryUser = "tanijimhossain";
-      hostName = "audacioustux-fn";
+      primaryUser = "khandkermahmudur";
+      hostName = "KMRFNs-MacBook-Pro.local";
     in
     {
       # build darwin flake using:
@@ -38,7 +38,7 @@
         system = "aarch64-darwin";
         modules = [
           ./darwin
-          ./hosts/audacioustux-fn/configuration.nix
+          ./hosts/KMRFNs-MacBook-Pro.local/configuration.nix
         ];
         specialArgs = { inherit inputs self primaryUser hostName; };
       };
