@@ -29,7 +29,6 @@
 
       # SDK nixpackage managers
       fnm
-      yarn
     ];
   };
 }

@@ -7,6 +7,8 @@ _: {
 
     initContent = ''
       eval "$(fnm env --use-on-cd)"
+      export COREPACK_HOME="$HOME/.cache/corepack"
+      export PATH="$COREPACK_HOME/bin:$PATH"
     '';
 
     shellAliases = {
