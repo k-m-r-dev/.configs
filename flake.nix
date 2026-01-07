@@ -29,7 +29,7 @@
     let
       # TODO: replace with your username
       primaryUser = "khandkermahmudur";
-      hostName = "KMRFNs-MacBook-Pro.local";
+      hostName = "kmrfn.local";
     in
     {
       # build darwin flake using:
@@ -38,12 +38,15 @@
         system = "aarch64-darwin";
         modules = [
           ./darwin
-          ./hosts/KMRFNs-MacBook-Pro.local/configuration.nix
+          ./hosts/kmrfn.local/configuration.nix
         ];
         specialArgs = { inherit inputs self primaryUser hostName; };
       };
 
       # Expose the system for `nix build`
-      packages.aarch64-darwin.default = self.darwinConfigurations."${hostName}".system;
+      packages.aarch64-darwin = {
+        default = self.darwinConfigurations."${hostName}".system;
+        darwinConfigurations."${hostName}".system = self.darwinConfigurations."${hostName}".system;
+      };
     };
 }
