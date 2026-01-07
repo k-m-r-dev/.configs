@@ -43,6 +43,9 @@
         specialArgs = { inherit inputs self primaryUser hostName; };
       };
 
+      # Alias for short hostname (without .local)
+      darwinConfigurations.kmrfn = self.darwinConfigurations."${hostName}";
+
       # Expose the system for `nix build`
       packages.aarch64-darwin = {
         default = self.darwinConfigurations."${hostName}".system;
