@@ -46,7 +46,7 @@
       # Expose the system for `nix build`
       packages.aarch64-darwin = {
         default = self.darwinConfigurations."${hostName}".system;
-        darwinConfigurations."${hostName}".system = self.darwinConfigurations."${hostName}".system;
+        darwinSystem = self.darwinConfigurations."${hostName}".system;
       };
     };
 }
