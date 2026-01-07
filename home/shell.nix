@@ -5,6 +5,10 @@ _: {
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
 
+    initContent = ''
+      eval "$(fnm env --use-on-cd)"
+    '';
+
     shellAliases = {
       la = "ls -la";
       ".." = "cd ..";

@@ -25,6 +25,10 @@
 
       # fonts
       nerd-fonts.monaspace
+
+      # SDK nixpackage managers
+      fnm
+      yarn
     ];
   };
 }
