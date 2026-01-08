@@ -22,6 +22,9 @@ _: {
       # Source AWS Utils
       [[ -f "$HOME/.aws_utils.zsh" ]] && source "$HOME/.aws_utils.zsh"
 
+      # Source NPM Utils, which set NPM token for FN private registry
+      [[ -f "$HOME/.npm_utils.zsh" ]] && source "$HOME/.npm_utils.zsh"
+
       # Load NVM (Node Version Manager)
       export NVM_DIR="$HOME/.nvm"
       [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
