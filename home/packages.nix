@@ -29,6 +29,7 @@
 
       # SDK nixpackage managers
       fnm
+      watchman
     ];
   };
 }

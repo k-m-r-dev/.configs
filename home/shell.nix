@@ -32,6 +32,14 @@ _: {
 
       # Added by Antigravity
       export PATH="/Users/khandkermahmudur/.antigravity/antigravity/bin:$PATH"
+
+      # Set JAVA_HOME to Zulu 17 if available
+      if command -v /usr/libexec/java_home >/dev/null 2>&1; then
+        export JAVA_HOME=$(/usr/libexec/java_home -v 17 2>/dev/null || echo "")
+        if [ -n "$JAVA_HOME" ]; then
+          export PATH="$JAVA_HOME/bin:$PATH"
+        fi
+      fi
     '';
 
     shellAliases = {

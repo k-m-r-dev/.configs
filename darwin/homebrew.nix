@@ -35,6 +35,8 @@
       # "signal"
 
       # other
+      # Java (Azul Zulu JDK 17)
+      "zulu@17"
       # "1password"
       # "anki"
       # "brave-browser"
