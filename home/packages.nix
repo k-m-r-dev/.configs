@@ -30,6 +30,12 @@
       # SDK nixpackage managers
       fnm
       watchman
+
+      # npm global CLIs
+      nodePackages.eas-cli
+
+      # Apple development
+      cocoapods
     ];
   };
 }

@@ -30,7 +30,7 @@
       # "zed"
 
       # messaging
-      "discord"
+      # "discord"
       # "slack"
       # "signal"
 
