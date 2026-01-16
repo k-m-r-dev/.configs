@@ -54,6 +54,10 @@ _: {
           export NDK_HOME="$ANDROID_NDK_HOME"
         fi
       fi
+
+      # Appium configuration
+      export APPIUM_HOME="$HOME/.appium"
+      export APPIUM_LOG_LEVEL="info"
     '';
 
     shellAliases = {

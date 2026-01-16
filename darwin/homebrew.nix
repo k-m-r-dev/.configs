@@ -34,6 +34,10 @@
       # "slack"
       # "signal"
 
+      # mobile testing
+      "appium-desktop"
+      "appium-inspector"
+
       # other
       # Java (Azul Zulu JDK 17)
       "zulu@17"

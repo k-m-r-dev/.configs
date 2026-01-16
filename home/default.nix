@@ -5,6 +5,7 @@
     ./git.nix
     ./shell.nix
     ./gpg.nix
+    ./appium.nix
   ];
 
   home = {
