@@ -40,6 +40,20 @@ _: {
           export PATH="$JAVA_HOME/bin:$PATH"
         fi
       fi
+
+      # Set ANDROID_HOME for Android SDK (from Android Studio)
+      export ANDROID_HOME="$HOME/Library/Android/sdk"
+      if [ -d "$ANDROID_HOME" ]; then
+        export PATH="$ANDROID_HOME/platform-tools:$PATH"
+        export PATH="$ANDROID_HOME/tools:$PATH"
+        export PATH="$ANDROID_HOME/tools/bin:$PATH"
+        
+        # Set ANDROID_NDK_HOME to the latest NDK version
+        if [ -d "$ANDROID_HOME/ndk" ]; then
+          export ANDROID_NDK_HOME="$(ls -d $ANDROID_HOME/ndk/* 2>/dev/null | tail -n 1)"
+          export NDK_HOME="$ANDROID_NDK_HOME"
+        fi
+      fi
     '';
 
     shellAliases = {
