@@ -33,9 +33,6 @@
 
       # npm global CLIs
       nodePackages.eas-cli
-      nodePackages.appium-doctor
-      nodePackages.appium
-      nodePackages.webdriverio
 
       # Apple development
       cocoapods
