@@ -35,7 +35,6 @@
       # "signal"
 
       # mobile testing
-      "appium-desktop"
       "appium-inspector"
 
       # other
