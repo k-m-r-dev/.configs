@@ -13,7 +13,8 @@
       # Install Appium tools globally if not already installed
       if ! command -v appium &> /dev/null; then
         echo "Installing Appium..."
-        npm install -g appium appium-doctor webdriverio
+        npm install -g appium webdriverio
+        npm install @appium/doctor --location=global
       fi
     '';
   };

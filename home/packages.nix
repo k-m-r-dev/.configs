@@ -36,6 +36,14 @@
 
       # Apple development
       cocoapods
+      
+      # iOS deployment and simulator utilities
+      ios-deploy
+
+      # iOS location simulation handled via Homebrew tap
+
+      # Screen recording
+      ffmpeg
     ];
   };
 }

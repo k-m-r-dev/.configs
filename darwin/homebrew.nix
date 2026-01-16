@@ -52,9 +52,13 @@
     brews = [
       # "docker"
       # "colima"
+      "wix/brew/applesimutils"
+      "lyft/formulae/set-simulator-location"
     ];
     taps = [
       # "nikitabobko/tap"
+      "wix/brew"
+      "lyft/formulae"
     ];
   };
 }
