@@ -44,6 +44,8 @@ _: {
       # Set ANDROID_HOME for Android SDK (from Android Studio)
       export ANDROID_HOME="$HOME/Library/Android/sdk"
       if [ -d "$ANDROID_HOME" ]; then
+        
+        export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
         export PATH="$ANDROID_HOME/platform-tools:$PATH"
         export PATH="$ANDROID_HOME/tools:$PATH"
         export PATH="$ANDROID_HOME/tools/bin:$PATH"
