@@ -54,11 +54,16 @@
       # "colima"
       "wix/brew/applesimutils"
       "lyft/formulae/set-simulator-location"
+      "facebook/fb/idb-companion"
+      "bundletool"
+      "gstreamer"
+      "gst-plugins-base"
     ];
     taps = [
       # "nikitabobko/tap"
       "wix/brew"
       "lyft/formulae"
+      "facebook/fb"
     ];
   };
 }

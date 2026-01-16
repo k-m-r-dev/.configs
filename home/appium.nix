@@ -15,6 +15,12 @@
         echo "Installing Appium..."
         npm install -g appium @appium/doctor webdriverio
       fi
+
+      # Install mjpeg-consumer for MJPEG-over-HTTP features
+      if ! npm list -g mjpeg-consumer >/dev/null 2>&1; then
+        echo "Installing mjpeg-consumer..."
+        npm install -g mjpeg-consumer
+      fi
     '';
   };
 
