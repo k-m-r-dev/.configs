@@ -27,8 +27,13 @@ _: {
 
       # Load NVM (Node Version Manager)
       export NVM_DIR="$HOME/.nvm"
+      unset NPM_CONFIG_PREFIX  # Unset before NVM to avoid conflicts
       [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
       [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+      # Global npm prefix in user home (after NVM to avoid conflicts)
+      export NPM_CONFIG_PREFIX="$HOME/.npm-global"
+      export PATH="$NPM_CONFIG_PREFIX/bin:$PATH"
 
       # Added by Antigravity
       export PATH="/Users/khandkermahmudur/.antigravity/antigravity/bin:$PATH"
@@ -60,12 +65,19 @@ _: {
       # Appium configuration
       export APPIUM_HOME="$HOME/.appium"
       export APPIUM_LOG_LEVEL="info"
+
+      # Android bundletool jar path (Homebrew)
+      export BUNDLETOOL_PATH="/opt/homebrew/opt/bundletool/libexec/bundletool-all.jar"
+
+      # pipx installs live in ~/.local/bin
+      export PATH="$HOME/.local/bin:$PATH"
     '';
 
     shellAliases = {
       la = "ls -la";
       ".." = "cd ..";
       "nix-switch" = "sudo darwin-rebuild switch --flake ~/.config/nix";
+      bundletool = "java -jar /opt/homebrew/opt/bundletool/libexec/bundletool-all.jar";
     };
 
     oh-my-zsh = {

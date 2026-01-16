@@ -34,6 +34,9 @@
       # npm global CLIs
       nodePackages.eas-cli
 
+      # Python tool runners
+      python311Packages.pipx
+
       # Apple development
       cocoapods
       
