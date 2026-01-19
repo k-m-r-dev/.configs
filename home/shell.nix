@@ -19,6 +19,14 @@ _: {
       export COREPACK_HOME="$HOME/.cache/corepack"
       export PATH="$COREPACK_HOME/bin:$PATH"
 
+      # FVM (Flutter Version Manager) configuration
+      export FVM_CACHE_PATH="$HOME/fvm"
+      export PATH="$HOME/.pub-cache/bin:$PATH"
+      # Optionally use FVM default Flutter version
+      if [ -d "$FVM_CACHE_PATH/default/bin" ]; then
+        export PATH="$FVM_CACHE_PATH/default/bin:$PATH"
+      fi
+
       # Source AWS Utils
       [[ -f "$HOME/.aws_utils.zsh" ]] && source "$HOME/.aws_utils.zsh"
 

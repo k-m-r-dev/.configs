@@ -23,12 +23,14 @@
       uv
       nodejs_22
       bun
+      dart
 
       # fonts
       nerd-fonts.monaspace
 
       # SDK nixpackage managers
       fnm
+      fvm
       watchman
 
       # npm global CLIs
