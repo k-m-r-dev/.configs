@@ -79,6 +79,9 @@ _: {
 
       # pipx installs live in ~/.local/bin
       export PATH="$HOME/.local/bin:$PATH"
+
+      # Field Nation local setup script
+      export SETUP_PATH="$HOME/Workspace/fieldnation/fn-local-setup/setup.sh"
     '';
 
     shellAliases = {
@@ -86,6 +89,7 @@ _: {
       ".." = "cd ..";
       "nix-switch" = "sudo darwin-rebuild switch --flake ~/.config/nix";
       bundletool = "java -jar /opt/homebrew/opt/bundletool/libexec/bundletool-all.jar";
+      setup = "$SETUP_PATH";
     };
 
     oh-my-zsh = {
