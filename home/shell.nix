@@ -94,7 +94,7 @@ _: {
 
     oh-my-zsh = {
       enable = true;
-      plugins = [ "git" "zoxide" "direnv" ];
+      plugins = [ "git" "zoxide" "direnv" "aws" "react-native" "flutter" ];
       theme = "eastwood";
     };
   };
