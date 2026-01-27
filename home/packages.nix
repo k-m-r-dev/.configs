@@ -14,6 +14,7 @@
       zoxide
       direnv
       kubectl
+      mysql80
 
       # LLM CLIs
       pkgsMaster.opencode
