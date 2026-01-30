@@ -9,6 +9,9 @@ _: {
       # Source .profile if it exists (for environment variables set in bash profile)
       [[ -f "$HOME/.profile" ]] && source "$HOME/.profile"
 
+      # GPG configuration
+      export GPG_TTY=$(tty)
+
       # Start ssh-agent and add GitHub key if not running/present
       if ! ssh-add -l > /dev/null; then
         ssh-add --apple-use-keychain ~/.ssh/id_ed25519_fn
