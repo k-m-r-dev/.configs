@@ -28,6 +28,7 @@
       # "visual-studio-code"
       # "wezterm"
       # "zed"
+      "copilot-cli"
 
       # messaging
       # "discord"
