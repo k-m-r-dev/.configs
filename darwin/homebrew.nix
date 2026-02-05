@@ -26,7 +26,7 @@
       # "cursor"
       # "ghostty"
       # "visual-studio-code"
-      # "wezterm"
+      "wezterm"
       # "zed"
       "copilot-cli"
 
