@@ -50,6 +50,9 @@
 
       # Screen recording
       ffmpeg
+
+      # Google Cloud
+      google-cloud-sdk
     ];
   };
 }
