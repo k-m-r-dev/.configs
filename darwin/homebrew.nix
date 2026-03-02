@@ -29,6 +29,7 @@
       "wezterm"
       # "zed"
       "copilot-cli"
+      "github-copilot-for-xcode"
 
       # messaging
       # "discord"
