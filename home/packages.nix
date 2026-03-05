@@ -53,6 +53,8 @@
 
       # Google Cloud
       google-cloud-sdk
+
+      k9s
     ];
   };
 }
