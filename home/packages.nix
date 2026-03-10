@@ -25,6 +25,7 @@
       nodejs_22
       bun
       dart
+      php82
 
       # fonts
       nerd-fonts.monaspace
