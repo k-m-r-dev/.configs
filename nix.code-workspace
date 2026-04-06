@@ -4,5 +4,13 @@
 			"path": "."
 		}
 	],
-	"settings": {}
+	"settings": {
+		"chat.tools.terminal.autoApprove": {
+			"nix": true,
+			"/^ls /nix/store/bs4qhmir62jcc95n87qhs4v0d95ygad6-zulu-ca-jdk-11\\.0\\.24/ && echo \"---\" && /nix/store/bs4qhmir62jcc95n87qhs4v0d95ygad6-zulu-ca-jdk-11\\.0\\.24/bin/java -version 2>&1$/": {
+				"approve": true,
+				"matchCommandLine": true
+			}
+		}
+	}
 }

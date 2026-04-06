@@ -1,4 +1,5 @@
-_: {
+{ pkgs, ... }:
+{
   programs.zsh = {
     enable = true;
     enableCompletion = true;
@@ -49,13 +50,24 @@ _: {
       # Added by Antigravity
       export PATH="/Users/khandkermahmudur/.antigravity/antigravity/bin:$PATH"
 
-      # Set JAVA_HOME to Zulu 17 if available
-      if command -v /usr/libexec/java_home >/dev/null 2>&1; then
-        export JAVA_HOME=$(/usr/libexec/java_home -v 17 2>/dev/null || echo "")
-        if [ -n "$JAVA_HOME" ]; then
-          export PATH="$JAVA_HOME/bin:$PATH"
-        fi
-      fi
+      # JDK paths (baked in by Nix at build time)
+      export JAVA_HOME_11="${pkgs.zulu11}"
+      export JAVA_HOME_17="${pkgs.zulu17}"
+      export JAVA_HOME="$JAVA_HOME_17"
+      export PATH="$JAVA_HOME/bin:$PATH"
+
+      # Switch between Nix-managed JDK versions
+      # Usage: use-java 11 | use-java 17
+      use-java() {
+        local version="''${1:-17}"
+        case "$version" in
+          11) export JAVA_HOME="$JAVA_HOME_11" ;;
+          17) export JAVA_HOME="$JAVA_HOME_17" ;;
+          *) echo "Usage: use-java [11|17]"; return 1 ;;
+        esac
+        export PATH="$JAVA_HOME/bin:$PATH"
+        echo "Switched to $(java -version 2>&1 | head -1)"
+      }
 
       # Set ANDROID_HOME for Android SDK (from Android Studio)
       export ANDROID_HOME="$HOME/Library/Android/sdk"

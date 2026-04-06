@@ -1,4 +1,4 @@
-{ pkgs, pkgsMaster, ... }:
+{ pkgs, pkgsMaster, lib, ... }: # lib used for lib.hiPrio
 {
   home = {
     packages = with pkgs; [
@@ -56,6 +56,11 @@
       google-cloud-sdk
 
       k9s
+
+      # JDK versions (zulu17 is default — zulu11 available via use-java 11)
+      (lib.hiPrio zulu17)
+      zulu11
     ];
+
   };
 }
