@@ -32,10 +32,16 @@
       if [ -z "$npm_bin" ]; then
         echo "npm not found in activation; skipping Appium npm installs"
       else
-        # Install Appium tools globally if not already installed
-        if ! command -v appium &> /dev/null; then
-          echo "Installing Appium..."
-          "$npm_bin" install -g appium @appium/doctor webdriverio
+        # Keep tooling global, but do not pin a single global appium version.
+        # Appium versions are selected via npx wrappers in shell init.
+        if ! "$npm_bin" list -g @appium/doctor >/dev/null 2>&1; then
+          echo "Installing @appium/doctor..."
+          "$npm_bin" install -g @appium/doctor
+        fi
+
+        if ! "$npm_bin" list -g webdriverio >/dev/null 2>&1; then
+          echo "Installing webdriverio..."
+          "$npm_bin" install -g webdriverio
         fi
 
         # Install mjpeg-consumer for MJPEG-over-HTTP features
@@ -76,6 +82,20 @@
       # Appium configuration
       export APPIUM_HOME="$HOME/.appium"
       export APPIUM_LOG_LEVEL="info"
+
+      # Appium multi-version helpers
+      # Use project-pinned versions without relying on a single global install.
+      appium2() { npx --yes appium@2.12.1 "$@"; }
+      appium3() { npx --yes appium@3.1.2 "$@"; }
+      appiumv() {
+        local version="$1"
+        shift
+        if [ -z "$version" ]; then
+          echo "Usage: appiumv <version> [args...]"
+          return 1
+        fi
+        npx --yes "appium@$version" "$@"
+      }
     '';
   };
 }
