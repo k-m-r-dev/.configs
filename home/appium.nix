@@ -127,7 +127,7 @@
 
       appium2() {
         appium2_sync_drivers
-        APPIUM_HOME="$HOME/.appium2" npx --yes appium@2.12.1 "$@"
+        APPIUM_HOME="$HOME/.appium2" npx --yes appium@2.12.1 --allow-insecure adb_shell "$@"
       }
       appium3() {
         appium3_sync_drivers
