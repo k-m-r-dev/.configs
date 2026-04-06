@@ -84,9 +84,55 @@
       export APPIUM_LOG_LEVEL="info"
 
       # Appium multi-version helpers
-      # Use project-pinned versions without relying on a single global install.
-      appium2() { npx --yes appium@2.12.1 "$@"; }
-      appium3() { npx --yes appium@3.1.2 "$@"; }
+      # Keep isolated extension/driver trees per major version to avoid peer conflicts.
+      appium2_sync_drivers() {
+        local home2="$HOME/.appium2"
+        local installed
+        installed="$(APPIUM_HOME="$home2" npx --yes appium@2.12.1 driver list --installed 2>/dev/null || true)"
+
+        # Enforce exact versions for the Appium 2 workflow.
+        if ! echo "$installed" | grep -q "uiautomator2@3.8.2"; then
+          APPIUM_HOME="$home2" npx --yes appium@2.12.1 driver uninstall uiautomator2 >/dev/null 2>&1 || true
+          APPIUM_HOME="$home2" npx --yes appium@2.12.1 driver install uiautomator2@3.8.2
+        fi
+
+        if ! echo "$installed" | grep -q "xcuitest@5.14.0"; then
+          APPIUM_HOME="$home2" npx --yes appium@2.12.1 driver uninstall xcuitest >/dev/null 2>&1 || true
+          APPIUM_HOME="$home2" npx --yes appium@2.12.1 driver install xcuitest@5.14.0
+        fi
+      }
+
+      appium3_sync_drivers() {
+        local home3="$HOME/.appium3"
+        local installed
+        installed="$(APPIUM_HOME="$home3" npx --yes appium@3.1.2 driver list --installed 2>/dev/null || true)"
+
+        # Install latest compatible drivers for Appium 3 if missing.
+        if ! echo "$installed" | grep -q "uiautomator2@"; then
+          APPIUM_HOME="$home3" npx --yes appium@3.1.2 driver install uiautomator2
+        fi
+
+        if ! echo "$installed" | grep -q "xcuitest@"; then
+          APPIUM_HOME="$home3" npx --yes appium@3.1.2 driver install xcuitest
+        fi
+      }
+
+      appium3_refresh_drivers() {
+        local home3="$HOME/.appium3"
+        APPIUM_HOME="$home3" npx --yes appium@3.1.2 driver uninstall uiautomator2 >/dev/null 2>&1 || true
+        APPIUM_HOME="$home3" npx --yes appium@3.1.2 driver uninstall xcuitest >/dev/null 2>&1 || true
+        APPIUM_HOME="$home3" npx --yes appium@3.1.2 driver install uiautomator2
+        APPIUM_HOME="$home3" npx --yes appium@3.1.2 driver install xcuitest
+      }
+
+      appium2() {
+        appium2_sync_drivers
+        APPIUM_HOME="$HOME/.appium2" npx --yes appium@2.12.1 "$@"
+      }
+      appium3() {
+        appium3_sync_drivers
+        APPIUM_HOME="$HOME/.appium3" npx --yes appium@3.1.2 "$@"
+      }
       appiumv() {
         local version="$1"
         shift
@@ -94,7 +140,11 @@
           echo "Usage: appiumv <version> [args...]"
           return 1
         fi
-        npx --yes "appium@$version" "$@"
+        case "$version" in
+          2.*) APPIUM_HOME="$HOME/.appium2" npx --yes "appium@$version" "$@" ;;
+          3.*) APPIUM_HOME="$HOME/.appium3" npx --yes "appium@$version" "$@" ;;
+          *) APPIUM_HOME="$HOME/.appium" npx --yes "appium@$version" "$@" ;;
+        esac
       }
     '';
   };
