@@ -6,7 +6,7 @@
     onActivation = {
       autoUpdate = false;
       upgrade = true;
-      cleanup = "zap";
+      cleanup = "uninstall"; # was "zap" — downgraded to avoid removing manually-installed casks
     };
 
     # caskArgs.no_quarantine = true;
@@ -26,7 +26,7 @@
       # "cursor"
       # "ghostty"
       # "visual-studio-code"
-      "wezterm"
+      # "wezterm" -- incompatible with nix-homebrew patched brew 4.5.6; install manually: brew install --cask wezterm
       # "zed"
       "copilot-cli"
       "github-copilot-for-xcode"
@@ -40,8 +40,8 @@
       "appium-inspector"
 
       # other
-      # Java (Azul Zulu JDK 17)
-      "zulu@17"
+      # Java (Azul Zulu JDK 17) -- incompatible with nix-homebrew patched brew 4.5.6; install manually: brew install --cask zulu@17
+      # "zulu@17"
       # "1password"
       # "anki"
       # "brave-browser"
