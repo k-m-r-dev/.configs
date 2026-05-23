@@ -28,7 +28,6 @@
       # "visual-studio-code"
       # "wezterm" -- incompatible with nix-homebrew patched brew 4.5.6; install manually: brew install --cask wezterm
       # "zed"
-      "copilot-cli"
       "github-copilot-for-xcode"
 
       # messaging

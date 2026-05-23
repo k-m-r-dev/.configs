@@ -2,13 +2,11 @@
 {
   programs.gh = {
     enable = true;
-    extensions = [ pkgs.gh-copilot ];
+    extensions = [ pkgs.github-copilot-cli ];
   };
 
   programs.git = {
     enable = true;
-    userName = "Khandker Mahmudur Rahman";
-    userEmail = "mahmudur.rahman@fieldnation.com";
 
     signing = {
       key = "B87897B3E9596077";
@@ -19,7 +17,11 @@
 
     ignores = [ "**/.DS_STORE" "**/.serena" ];
 
-    extraConfig = {
+    settings = {
+      user = {
+        name = "Khandker Mahmudur Rahman";
+        email = "mahmudur.rahman@fieldnation.com";
+      };
       github = {
         user = "kmrfn";
       };
