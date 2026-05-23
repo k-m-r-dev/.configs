@@ -6,6 +6,7 @@
     ./shell.nix
     ./gpg.nix
     ./appium.nix
+    ./ollama.nix
   ];
 
   home = {

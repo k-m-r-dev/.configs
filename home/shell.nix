@@ -98,6 +98,9 @@
 
       # Field Nation local setup script
       export SETUP_PATH="$HOME/Workspace/fieldnation/fn-local-setup/setup.sh"
+
+      # Unalias gsd set by oh-my-zsh git plugin (conflicts with gsd-pi)
+      unalias gsd 2>/dev/null || true
     '';
 
     shellAliases = {

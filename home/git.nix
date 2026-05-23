@@ -1,5 +1,10 @@
-{ primaryUser, ... }:
+{ primaryUser, pkgs, ... }:
 {
+  programs.gh = {
+    enable = true;
+    extensions = [ pkgs.gh-copilot ];
+  };
+
   programs.git = {
     enable = true;
     userName = "Khandker Mahmudur Rahman";

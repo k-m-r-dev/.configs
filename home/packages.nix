@@ -10,7 +10,6 @@
       btop
       tree
       ripgrep
-      gh
       zoxide
       direnv
       kubectl

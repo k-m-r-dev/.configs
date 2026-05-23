@@ -54,6 +54,7 @@
     brews = [
       # "docker"
       # "colima"
+      "ollama"
       "sops"
       "wix/brew/applesimutils"
       "lyft/formulae/set-simulator-location"
