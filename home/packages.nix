@@ -35,7 +35,7 @@
       watchman
 
       # npm global CLIs
-      nodePackages.eas-cli
+      eas-cli
 
       # Python tool runners
       python311Packages.pipx
