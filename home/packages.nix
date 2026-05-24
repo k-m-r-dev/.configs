@@ -32,19 +32,16 @@
       # SDK nixpackage managers
       fnm
       fvm
-      watchman
 
       # npm global CLIs
       eas-cli
 
-      # Python tool runners
-      python311Packages.pipx
+      # Python tool runners (pipx managed via Homebrew due to nixpkgs build failure)
 
       # Apple development
       cocoapods
       
-      # iOS deployment and simulator utilities
-      ios-deploy
+      # iOS deployment is installed via Homebrew (nixpkgs build hits impure host deps on macOS)
 
       # iOS location simulation handled via Homebrew tap
 
