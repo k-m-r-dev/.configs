@@ -44,6 +44,9 @@
       [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
       [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
+      # Enforce Node 22 as the NVM default (required by gsd-pi)
+      nvm alias default 22 >/dev/null 2>&1 || true
+
       # Global npm prefix in user home (after NVM to avoid conflicts)
       export NPM_CONFIG_PREFIX="$HOME/.npm-global"
       export PATH="$NPM_CONFIG_PREFIX/bin:$PATH"
