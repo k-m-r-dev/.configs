@@ -47,9 +47,9 @@
       # Enforce Node 22 as the NVM default (required by gsd-pi)
       nvm alias default 22 >/dev/null 2>&1 || true
 
-      # Global npm prefix in user home (after NVM to avoid conflicts)
-      export NPM_CONFIG_PREFIX="$HOME/.npm-global"
-      export PATH="$NPM_CONFIG_PREFIX/bin:$PATH"
+      # Keep ~/.npm-global/bin on PATH for tools installed via activation hooks
+      # (do NOT export NPM_CONFIG_PREFIX here — it breaks `nvm use`)
+      export PATH="$HOME/.npm-global/bin:$PATH"
 
       # Added by Antigravity
       export PATH="/Users/khandkermahmudur/.antigravity/antigravity/bin:$PATH"
