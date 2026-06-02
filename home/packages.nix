@@ -81,7 +81,7 @@
           local pkg="$1"
           local installed latest
           installed="$( "$npm_bin" list -g --depth=0 "$pkg" 2>/dev/null \
-            | grep -F "$pkg" | awk -F'@' '{print $NF}' | head -n 1 )"
+            | grep -F "$pkg@" | sed 's/.*@//' | head -n 1 )"
           latest="$( "$npm_bin" view "$pkg" version 2>/dev/null || true )"
 
           if [ -z "$latest" ]; then
