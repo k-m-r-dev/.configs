@@ -2,7 +2,6 @@
 {
   programs.gh = {
     enable = true;
-    extensions = [ pkgs.github-copilot-cli ];
   };
 
   programs.git = {
