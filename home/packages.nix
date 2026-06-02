@@ -33,8 +33,7 @@
       fnm
       fvm
 
-      # npm global CLIs
-      eas-cli
+      # npm global CLIs managed via activation.npmGlobals below
 
       # Python tool runners (pipx managed via Homebrew due to nixpkgs build failure)
 
@@ -76,20 +75,32 @@
       if [ -z "$npm_bin" ]; then
         echo "npm not found in activation; skipping npm global installs"
       else
-        # @opengsd/gsd-pi — keep at npm latest; remove and reinstall if outdated
-        gsd_installed="$("$npm_bin" list -g --depth=0 @opengsd/gsd-pi 2>/dev/null | sed -n 's/.*@opengsd\/gsd-pi@\([^ ]*\).*/\1/p' | head -n 1)"
-        gsd_latest="$("$npm_bin" view @opengsd/gsd-pi version 2>/dev/null || true)"
+        # Helper: install or update a global npm package to latest
+        # Usage: npm_ensure_latest <package>
+        npm_ensure_latest() {
+          local pkg="$1"
+          local installed latest
+          installed="$( "$npm_bin" list -g --depth=0 "$pkg" 2>/dev/null \
+            | sed -n "s/.*${pkg//\//\\/}@\([^ ]*\).*/\1/p" | head -n 1 )"
+          latest="$( "$npm_bin" view "$pkg" version 2>/dev/null || true )"
 
-        if [ -z "$gsd_latest" ]; then
-          echo "Could not fetch @opengsd/gsd-pi latest version; skipping"
-        elif [ -z "$gsd_installed" ]; then
-          echo "Installing @opengsd/gsd-pi@$gsd_latest..."
-          "$npm_bin" install -g @opengsd/gsd-pi@latest
-        elif [ "$gsd_installed" != "$gsd_latest" ]; then
-          echo "Updating @opengsd/gsd-pi ($gsd_installed -> $gsd_latest)..."
-          "$npm_bin" uninstall -g @opengsd/gsd-pi >/dev/null 2>&1 || true
-          "$npm_bin" install -g @opengsd/gsd-pi@latest
-        fi
+          if [ -z "$latest" ]; then
+            echo "Could not fetch $pkg latest version; skipping"
+          elif [ -z "$installed" ]; then
+            echo "Installing $pkg@$latest..."
+            "$npm_bin" install -g "$pkg@latest"
+          elif [ "$installed" != "$latest" ]; then
+            echo "Updating $pkg ($installed -> $latest)..."
+            "$npm_bin" uninstall -g "$pkg" >/dev/null 2>&1 || true
+            "$npm_bin" install -g "$pkg@latest"
+          fi
+        }
+
+        # @opengsd/gsd-pi — keep at npm latest; remove and reinstall if outdated
+        npm_ensure_latest @opengsd/gsd-pi
+
+        # eas-cli — managed here (not nixpkgs) to always track npm latest
+        npm_ensure_latest eas-cli
       fi
     '';
 
