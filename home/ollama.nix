@@ -1,14 +1,11 @@
 { ... }:
 {
   # Ollama local LLM service management
-  home.sessionVariables = {
-    OLLAMA_ORIGINS = "*";
-  };
-
   programs.zsh.initContent = ''
     # Ollama management
     ollama-start() {
-      local origin="''${OLLAMA_ORIGINS:-*}"
+      local origin=""
+      local origin_provided=0
       local model=""
 
       while [ "$#" -gt 0 ]; do
@@ -19,6 +16,7 @@
               return 1
             fi
             origin="$2"
+            origin_provided=1
             shift 2
             ;;
           --model)
@@ -42,7 +40,12 @@
       done
 
       mkdir -p "$HOME/.ollama"
-      printf "%s\n" "$origin" > "$HOME/.ollama/allowed-origin"
+
+      if [ "$origin_provided" -eq 1 ]; then
+        printf "%s\n" "$origin" > "$HOME/.ollama/allowed-origin"
+      else
+        rm -f "$HOME/.ollama/allowed-origin"
+      fi
 
       if [ -n "$model" ]; then
         printf "%s\n" "$model" > "$HOME/.ollama/default-model"
@@ -50,12 +53,24 @@
 
       if pgrep -x ollama > /dev/null; then
         echo "Ollama is already running."
-        echo "Configured origin: $origin"
+        if [ "$origin_provided" -eq 1 ]; then
+          echo "Configured origin: $origin"
+        else
+          echo "Configured origin: (not set)"
+        fi
         [ -n "$model" ] && echo "Configured default model: $model"
       else
-        OLLAMA_ORIGINS="$origin" nohup ollama serve > "$HOME/.ollama/serve.log" 2>&1 &
+        if [ "$origin_provided" -eq 1 ]; then
+          OLLAMA_ORIGINS="$origin" nohup ollama serve > "$HOME/.ollama/serve.log" 2>&1 &
+        else
+          nohup ollama serve > "$HOME/.ollama/serve.log" 2>&1 &
+        fi
         echo "Ollama started (PID $!). Log: ~/.ollama/serve.log"
-        echo "Allowed origin: $origin"
+        if [ "$origin_provided" -eq 1 ]; then
+          echo "Allowed origin: $origin"
+        else
+          echo "Allowed origin: (not set)"
+        fi
         if [ -f "$HOME/.ollama/default-model" ]; then
           echo "Default model: $(cat "$HOME/.ollama/default-model")"
         fi
@@ -76,8 +91,6 @@
 
       if [ -f "$HOME/.ollama/allowed-origin" ]; then
         configured_origin="$(cat "$HOME/.ollama/allowed-origin")"
-      else
-        configured_origin="''${OLLAMA_ORIGINS:-*}"
       fi
 
       if [ -f "$HOME/.ollama/default-model" ]; then
