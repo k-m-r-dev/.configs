@@ -1,6 +1,30 @@
-{ ... }:
+{ lib, ... }:
 {
   # Ollama local LLM service management
+
+  # After every `nix-switch`, check whether the Homebrew Ollama bottle is
+  # missing llama-server (a known packaging gap) and self-heal it by pulling
+  # the matching binary from the official GitHub release.
+  home.activation.ollamaRepairLlamaServer = lib.hm.dag.entryAfter [ "installPackages" ] ''
+    ollama_version=$(brew list --versions ollama 2>/dev/null | awk '{print $2}')
+    if [ -n "$ollama_version" ]; then
+      llama_server_path="/opt/homebrew/Cellar/ollama/$ollama_version/libexec/lib/ollama/llama-server"
+      if [ ! -f "$llama_server_path" ]; then
+        echo "ollama $ollama_version: llama-server missing — fetching from GitHub release..."
+        _tmp=$(mktemp -d)
+        curl -fsSL \
+          -o "$_tmp/ollama.zip" \
+          "https://github.com/ollama/ollama/releases/download/v$ollama_version/Ollama-darwin.zip"
+        unzip -q "$_tmp/ollama.zip" -d "$_tmp/ollama"
+        mkdir -p "$(dirname "$llama_server_path")"
+        cp "$_tmp/ollama/Ollama.app/Contents/Resources/llama-server" "$llama_server_path"
+        chmod +x "$llama_server_path"
+        rm -rf "$_tmp"
+        echo "ollama $ollama_version: llama-server installed at $llama_server_path"
+      fi
+    fi
+  '';
+
   programs.zsh.initContent = ''
     # Ollama management
     ollama-start() {
