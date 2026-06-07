@@ -21,7 +21,7 @@
 
       # languages runtimes
       uv
-      nodejs_22
+      nodejs_24
       bun
       dart
       php82

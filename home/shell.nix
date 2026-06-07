@@ -24,6 +24,9 @@
       export COREPACK_HOME="$HOME/.cache/corepack"
       export PATH="$COREPACK_HOME/bin:$PATH"
 
+      # Enforce Node 24 as the fnm default (required by gsd-pi)
+      fnm default 24 >/dev/null 2>&1 || true
+
       # FVM (Flutter Version Manager) configuration
       export FVM_CACHE_PATH="$HOME/fvm"
       export PATH="$HOME/.pub-cache/bin:$PATH"
@@ -43,9 +46,6 @@
       unset NPM_CONFIG_PREFIX  # Unset before NVM to avoid conflicts
       [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
       [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-      # Enforce Node 22 as the NVM default (required by gsd-pi)
-      nvm alias default 22 >/dev/null 2>&1 || true
 
       # Keep ~/.npm-global/bin on PATH for tools installed via activation hooks
       # (do NOT export NPM_CONFIG_PREFIX here — it breaks `nvm use`)
