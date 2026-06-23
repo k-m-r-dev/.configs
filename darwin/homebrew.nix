@@ -53,6 +53,7 @@
     brews = [
       # "docker"
       # "colima"
+      "bun"
       "ollama"
       "sops"
       "pipx"

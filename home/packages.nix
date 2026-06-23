@@ -22,7 +22,6 @@
       # languages runtimes
       uv
       nodejs_24
-      bun
       dart
       php82
 
@@ -57,7 +56,7 @@
       zulu11
     ];
 
-    # npm global packages not available in nixpkgs — managed via activation hook
+    # Global CLI packages not available in nixpkgs — managed via activation hook
     activation.npmGlobals = lib.hm.dag.entryAfter [ "installPackages" ] ''
       npm_bin="$(command -v npm || true)"
       if [ -z "$npm_bin" ] && [ -x "$HOME/.nix-profile/bin/npm" ]; then
@@ -67,10 +66,25 @@
         npm_bin="/etc/profiles/per-user/$USER/bin/npm"
       fi
 
+      bun_bin=""
+      if [ -x "/opt/homebrew/bin/bun" ]; then
+        bun_bin="/opt/homebrew/bin/bun"
+      elif [ -x "$HOME/.nix-profile/bin/bun" ]; then
+        bun_bin="$HOME/.nix-profile/bin/bun"
+      elif [ -x "/etc/profiles/per-user/$USER/bin/bun" ]; then
+        bun_bin="/etc/profiles/per-user/$USER/bin/bun"
+      else
+        bun_bin="$(command -v bun || true)"
+      fi
+
       npm_prefix="$HOME/.npm-global"
       export NPM_CONFIG_PREFIX="$npm_prefix"
       export PATH="$npm_prefix/bin:$PATH"
       mkdir -p "$npm_prefix"
+
+      export BUN_INSTALL="$HOME/.bun"
+      export PATH="$BUN_INSTALL/bin:$PATH"
+      mkdir -p "$BUN_INSTALL/bin"
 
       if [ -z "$npm_bin" ]; then
         echo "npm not found in activation; skipping npm global installs"
@@ -104,6 +118,13 @@
 
         # eas-cli — managed here (not nixpkgs) to always track npm latest
         npm_ensure_latest eas-cli
+      fi
+
+      if [ -z "$bun_bin" ]; then
+        echo "bun not found in activation; skipping bun global installs"
+      else
+        echo "Ensuring @oh-my-pi/pi-coding-agent is installed via bun..."
+        "$bun_bin" install -g @oh-my-pi/pi-coding-agent@latest
       fi
     '';
 

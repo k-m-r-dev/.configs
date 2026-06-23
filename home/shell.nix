@@ -47,9 +47,18 @@
       [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
       [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
+      # Bun global installs live here
+      export BUN_INSTALL="$HOME/.bun"
+      export PATH="$BUN_INSTALL/bin:$PATH"
+
       # Keep ~/.npm-global/bin on PATH for tools installed via activation hooks
       # (do NOT export NPM_CONFIG_PREFIX here — it breaks `nvm use`)
       export PATH="$HOME/.npm-global/bin:$PATH"
+
+      # Enable OMP completions when the binary is available
+      if command -v omp >/dev/null 2>&1; then
+        eval "$(omp completions zsh)"
+      fi
 
       # Added by Antigravity
       export PATH="/Users/khandkermahmudur/.antigravity/antigravity/bin:$PATH"
