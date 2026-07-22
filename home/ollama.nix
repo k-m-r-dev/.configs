@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ lib, pkgs, ... }:
 {
   # Ollama local LLM service management
 
@@ -6,7 +6,19 @@
   # missing llama-server (a known packaging gap) and self-heal it by pulling
   # the matching binary from the official GitHub release.
   home.activation.ollamaRepairLlamaServer = lib.hm.dag.entryAfter [ "installPackages" ] ''
-    ollama_version=$(brew list --versions ollama 2>/dev/null | awk '{print $2}')
+    brew_bin=""
+    if [ -x "/opt/homebrew/bin/brew" ]; then
+      brew_bin="/opt/homebrew/bin/brew"
+    else
+      brew_bin="$(command -v brew || true)"
+    fi
+
+    if [ -z "$brew_bin" ]; then
+      echo "brew not found in activation; skipping ollama llama-server repair"
+      exit 0
+    fi
+
+    ollama_version=$("$brew_bin" list --versions ollama 2>/dev/null | ${pkgs.gawk}/bin/awk '{print $2}' || true)
     if [ -n "$ollama_version" ]; then
       llama_server_path="/opt/homebrew/Cellar/ollama/$ollama_version/libexec/lib/ollama/llama-server"
       if [ ! -f "$llama_server_path" ]; then

@@ -5,7 +5,10 @@
 
     onActivation = {
       autoUpdate = false;
-      upgrade = true;
+      # Temporary workaround: nix-homebrew's patched brew currently errors in
+      # formula postinstall for some upgraded packages (e.g. ollama/watchman).
+      # Keep upgrades manual until patched brew is updated.
+      upgrade = false;
       cleanup = "uninstall"; # was "zap" — downgraded to avoid removing manually-installed casks
     };
 

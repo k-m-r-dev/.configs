@@ -92,10 +92,9 @@
         # Helper: install or update a global npm package to latest
         # Usage: npm_ensure_latest <package>
         npm_ensure_latest() {
-          local pkg="$1"
-          local installed latest
+          pkg="$1"
           installed="$( "$npm_bin" list -g --depth=0 "$pkg" 2>/dev/null \
-            | grep -F "$pkg@" | sed 's/.*@//' | head -n 1 )"
+            | grep -F "$pkg@" | sed 's/.*@//' | head -n 1 || true )"
           latest="$( "$npm_bin" view "$pkg" version 2>/dev/null || true )"
 
           if [ -z "$latest" ]; then
