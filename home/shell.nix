@@ -120,6 +120,7 @@
       la = "ls -la";
       ".." = "cd ..";
       "nix-switch" = "sudo darwin-rebuild switch --flake ~/.config/nix";
+      libreoffice = "soffice";
       bundletool = "java -jar /opt/homebrew/opt/bundletool/libexec/bundletool-all.jar";
       setup = "$SETUP_PATH";
     };

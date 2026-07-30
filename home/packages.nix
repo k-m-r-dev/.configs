@@ -24,6 +24,10 @@
       nodejs_24
       dart
       php82
+      rustc
+      cargo
+      rustfmt
+      clippy
 
       # fonts
       nerd-fonts.monaspace
@@ -45,6 +49,7 @@
 
       # Screen recording
       ffmpeg
+      libreoffice-bin
 
       # Google Cloud
       google-cloud-sdk
