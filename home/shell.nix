@@ -41,18 +41,21 @@
       # Source NPM Utils, which set NPM token for FN private registry
       [[ -f "$HOME/.npm_utils.zsh" ]] && source "$HOME/.npm_utils.zsh"
 
-      # Load NVM (Node Version Manager)
-      export NVM_DIR="$HOME/.nvm"
-      unset NPM_CONFIG_PREFIX  # Unset before NVM to avoid conflicts
-      [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-      [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+      # Source TDG token helper for CF Access credentials
+      [[ -f "$HOME/.tdg_token.zsh" ]] && source "$HOME/.tdg_token.zsh"
+
+      # Load NVM (Node Version Manager) - disabled in favor of fnm
+      # export NVM_DIR="$HOME/.nvm"
+      # unset NPM_CONFIG_PREFIX  # Unset before NVM to avoid conflicts
+      # [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+      # [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
       # Bun global installs live here
       export BUN_INSTALL="$HOME/.bun"
       export PATH="$BUN_INSTALL/bin:$PATH"
 
       # Keep ~/.npm-global/bin on PATH for tools installed via activation hooks
-      # (do NOT export NPM_CONFIG_PREFIX here — it breaks `nvm use`)
+      # (do NOT export NPM_CONFIG_PREFIX here)
       export PATH="$HOME/.npm-global/bin:$PATH"
 
       # Enable OMP completions when the binary is available
