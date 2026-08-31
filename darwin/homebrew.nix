@@ -40,6 +40,7 @@
 
       # mobile testing
       "appium-inspector"
+      "wizcli"
 
       # other
       # Java (Azul Zulu JDK 17) -- incompatible with nix-homebrew patched brew 4.5.6; install manually: brew install --cask zulu@17
