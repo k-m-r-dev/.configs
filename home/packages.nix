@@ -115,7 +115,7 @@
         }
 
         # @opengsd/gsd-pi — keep at npm latest; remove and reinstall if outdated
-        npm_ensure_latest @opengsd/gsd-pi
+        # npm_ensure_latest @opengsd/gsd-pi
 
         # claude-code — keep at npm latest
         npm_ensure_latest @anthropic-ai/claude-code

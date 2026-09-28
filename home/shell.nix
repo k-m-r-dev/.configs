@@ -25,7 +25,7 @@
       export PATH="$COREPACK_HOME/bin:$PATH"
 
       # Enforce Node 24 as the fnm default (required by gsd-pi)
-      fnm default 24 >/dev/null 2>&1 || true
+      # fnm default 24 >/dev/null 2>&1 || true
 
       # FVM (Flutter Version Manager) configuration
       export FVM_CACHE_PATH="$HOME/fvm"
@@ -116,7 +116,7 @@
       export SETUP_PATH="$HOME/Workspace/fieldnation/fn-local-setup/setup.sh"
 
       # Unalias gsd set by oh-my-zsh git plugin (conflicts with gsd-pi)
-      unalias gsd 2>/dev/null || true
+      # unalias gsd 2>/dev/null || true
     '';
 
     shellAliases = {
