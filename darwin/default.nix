@@ -3,6 +3,7 @@
   inputs,
   self,
   primaryUser,
+  sshPrivateKeys,
   config,
   lib,
   ...
@@ -53,7 +54,7 @@
       }
     ];
     extraSpecialArgs = {
-      inherit inputs self primaryUser;
+      inherit inputs self primaryUser sshPrivateKeys;
       pkgsMaster = import inputs.nixpkgs-master {
         system = pkgs.stdenv.hostPlatform.system;
         config.allowUnfree = true;

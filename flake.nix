@@ -27,19 +27,64 @@
       ...
     }@inputs:
     let
-      primaryUser = "mahmudur";
-      hostName = "k-m-r-dev";
+      # Flakes only see git-tracked files. Keep identity in this file (not flake.nix)
+      # and track it with git. See identity.example.nix for a fresh-machine template.
+      identityPath = ./identity.local.nix;
+
+      identity =
+        if builtins.pathExists identityPath then
+          import identityPath
+        else
+          throw ''
+            Missing identity.local.nix.
+
+            Copy the example and edit primaryUser, hostName, and sshPrivateKeys:
+              cp identity.example.nix identity.local.nix
+              git add identity.local.nix
+
+            See README.md (Setup identity). Do not put private key contents here.
+          '';
+
+      primaryUser = identity.primaryUser or (throw "identity.local.nix: missing primaryUser");
+      hostName = identity.hostName or (throw "identity.local.nix: missing hostName");
+      sshPrivateKeys = identity.sshPrivateKeys or (throw "identity.local.nix: missing sshPrivateKeys");
+
+      hostConfig = ./hosts + "/${hostName}/configuration.nix";
+
+      # Validation
+      _ =
+        assert builtins.isString primaryUser && primaryUser != "";
+        assert builtins.isString hostName && hostName != "";
+        assert builtins.isList sshPrivateKeys;
+        assert builtins.all (
+          k:
+          builtins.isString k
+          && k != ""
+          && builtins.match "[A-Za-z0-9._-]+" k != null
+        ) sshPrivateKeys;
+        assert builtins.pathExists hostConfig
+          || throw "identity.local.nix: no hosts/${hostName}/configuration.nix (fix hostName or add that host dir)";
+        null;
     in
-    {
+    # Force validation (unused `_` would be lazy otherwise).
+    builtins.seq _ {
       # build darwin flake using:
       # $ darwin-rebuild build --flake .#<name>
       darwinConfigurations."${hostName}" = darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         modules = [
           ./darwin
-          ./hosts/k-m-r-dev/configuration.nix
+          hostConfig
         ];
-        specialArgs = { inherit inputs self primaryUser hostName; };
+        specialArgs = {
+          inherit
+            inputs
+            self
+            primaryUser
+            hostName
+            sshPrivateKeys
+            ;
+        };
       };
 
       # Expose the system for `nix build`
