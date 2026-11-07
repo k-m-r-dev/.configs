@@ -228,13 +228,7 @@ Later applies:
 sudo darwin-rebuild switch --flake ~/.config/nix#$(~/.config/nix/scripts/identity-host.sh)
 ```
 
-Verify with:
-
-```bash
-~/.config/nix/scripts/verify-gap-step5.sh
-```
-
-Checks `docker` / `op` / `lean-ctx` and Appium/FVM paths; expects `aws` / Helix absent unless those features are enabled.
+Smoke-check after switch: `docker`, `op`, `lean-ctx`, and your Appium/FVM paths. `aws` / Helix should be absent unless those features are enabled.
 
 ## Recommended default order (if unsure)
 

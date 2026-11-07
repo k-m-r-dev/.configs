@@ -18,4 +18,4 @@ echo "Setting system profile to $SYS ..."
 sudo env HOME="$HOME" USER="$USER" PATH="$PATH" nix-env -p /nix/var/nix/profiles/system --set "$SYS"
 echo "Activating ..."
 sudo env HOME="$HOME" USER="$USER" PATH="$PATH" /nix/var/nix/profiles/system/sw/bin/darwin-rebuild activate
-echo "Done. Verify: ~/.config/nix/scripts/verify-gap-step5.sh"
+echo "Done."
