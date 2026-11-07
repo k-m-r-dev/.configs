@@ -27,70 +27,60 @@
       ...
     }@inputs:
     let
-      # Flakes only see git-tracked files. Keep identity in this file (not flake.nix)
-      # and track it with git. See identity.example.nix for a fresh-machine template.
-      identityPath = ./identity.local.nix;
+      # Pure multi-host map. Select with:
+      #   darwin-rebuild switch --flake ~/.config/nix#$(scutil --get LocalHostName)
+      hostNames = [
+        "k-m-r-dev"
+        "kmrfn"
+      ];
 
-      identity =
-        if builtins.pathExists identityPath then
-          import identityPath
-        else
-          throw ''
-            Missing identity.local.nix.
+      mkDarwin =
+        hostName:
+        let
+          identity = import (./hosts + "/${hostName}/identity.nix");
+          primaryUser = identity.primaryUser or (throw "hosts/${hostName}/identity.nix: missing primaryUser");
+          sshPrivateKeys = identity.sshPrivateKeys or [ ];
+          hostConfig = ./hosts + "/${hostName}/configuration.nix";
 
-            Copy the example and edit primaryUser, hostName, and sshPrivateKeys:
-              cp identity.example.nix identity.local.nix
-              git add identity.local.nix
-
-            See README.md (Setup identity). Do not put private key contents here.
-          '';
-
-      primaryUser = identity.primaryUser or (throw "identity.local.nix: missing primaryUser");
-      hostName = identity.hostName or (throw "identity.local.nix: missing hostName");
-      sshPrivateKeys = identity.sshPrivateKeys or (throw "identity.local.nix: missing sshPrivateKeys");
-
-      hostConfig = ./hosts + "/${hostName}/configuration.nix";
-
-      # Validation
-      _ =
-        assert builtins.isString primaryUser && primaryUser != "";
-        assert builtins.isString hostName && hostName != "";
-        assert builtins.isList sshPrivateKeys;
-        assert builtins.all (
-          k:
-          builtins.isString k
-          && k != ""
-          && builtins.match "[A-Za-z0-9._-]+" k != null
-        ) sshPrivateKeys;
-        assert builtins.pathExists hostConfig
-          || throw "identity.local.nix: no hosts/${hostName}/configuration.nix (fix hostName or add that host dir)";
-        null;
+          _ =
+            assert builtins.isString primaryUser && primaryUser != "";
+            assert builtins.isList sshPrivateKeys;
+            assert builtins.all (
+              k:
+              builtins.isString k
+              && k != ""
+              && builtins.match "[A-Za-z0-9._-]+" k != null
+            ) sshPrivateKeys;
+            assert builtins.pathExists hostConfig
+              || throw "hosts/${hostName}/configuration.nix missing";
+            null;
+        in
+        builtins.seq _ (
+          darwin.lib.darwinSystem {
+            system = "aarch64-darwin";
+            modules = [
+              ./darwin
+              hostConfig
+            ];
+            specialArgs = {
+              inherit
+                inputs
+                self
+                primaryUser
+                hostName
+                sshPrivateKeys
+                ;
+            };
+          }
+        );
     in
-    # Force validation (unused `_` would be lazy otherwise).
-    builtins.seq _ {
-      # build darwin flake using:
-      # $ darwin-rebuild build --flake .#<name>
-      darwinConfigurations."${hostName}" = darwin.lib.darwinSystem {
-        system = "aarch64-darwin";
-        modules = [
-          ./darwin
-          hostConfig
-        ];
-        specialArgs = {
-          inherit
-            inputs
-            self
-            primaryUser
-            hostName
-            sshPrivateKeys
-            ;
-        };
-      };
+    {
+      darwinConfigurations = nixpkgs.lib.genAttrs hostNames mkDarwin;
 
-      # Expose the system for `nix build`
+      # Default package follows this workstation; other hosts: .#darwinConfigurations.<name>.system
       packages.aarch64-darwin = {
-        default = self.darwinConfigurations."${hostName}".system;
-        darwinSystem = self.darwinConfigurations."${hostName}".system;
+        default = self.darwinConfigurations."k-m-r-dev".system;
+        darwinSystem = self.darwinConfigurations."k-m-r-dev".system;
       };
     };
 }

@@ -134,7 +134,7 @@ Reference also enables `wizcli`; you already have that cask.
 | Docker Desktop path | `/Applications/Docker.app/Contents/Resources/bin` on `systemPath` | Homebrew path only | Add if Docker Desktop credentials helper is needed |
 | App copy checks | `targets.darwin.copyApps.enableChecks = false` | unset | Add if Nix-managed GUI apps hit false TCC denials |
 | README adopt flow | install + `# CHANGE:` checklist | short usage README | Worth copying for onboarding |
-| Identity | reference uses its own username/host | `identity.local.nix` (`primaryUser`, `hostName`, `sshPrivateKeys`); example in `identity.example.nix` | Copy example per machine; do not commit local file |
+| Identity | reference uses its own username/host | `hosts/<name>/identity.nix` + `darwinConfigurations.<name>` | Select with `#$(scutil --get LocalHostName)` |
 
 ## What you have that the reference does not
 
@@ -154,14 +154,14 @@ Do not remove these to “match” the reference.
 
 ### Step 0 — unblock first switch
 
-**Status (this Mac):** identity via `identity.local.nix` (`primaryUser`, `hostName`, `sshPrivateKeys`); host dir `hosts/k-m-r-dev/`.
+**Status (this Mac):** per-host identity in `hosts/k-m-r-dev/identity.nix`; flake attr `#k-m-r-dev`.
 
 1. Confirm macOS username: `id -un` (or `whoami`).
-2. Confirm hostname: `scutil --get LocalHostName` (or `hostname`).
-3. `cp identity.example.nix identity.local.nix` and set `primaryUser`, `hostName`, and `sshPrivateKeys` (SSH private key **basenames** under `~/.ssh` only).
-4. Ensure `hosts/<hostName>/configuration.nix` exists for that `hostName`.
+2. Confirm hostname: `scutil --get LocalHostName`.
+3. Set `primaryUser` / `sshPrivateKeys` in `hosts/<name>/identity.nix` and list `<name>` in `flake.nix` `hostNames`.
+4. Ensure `hosts/<name>/configuration.nix` exists.
 5. Install Nix with the Determinate installer if `nix` is missing.
-6. Do not rebuild until identity matches, or Home Manager will target the wrong home directory. Never commit `identity.local.nix`.
+6. Do not rebuild until LocalHostName matches a flake attr, or Home Manager will target the wrong home directory.
 
 ### Step 1 — add Priority A items from the checkboxes
 
@@ -213,11 +213,11 @@ Pick one via the A2 `claude-code` checkbox, or leave it unchecked to keep npm:
 
 **Status (this Mac):** switch applied via identity-selected flake attr (Determinate Nix + nix-darwin activate). Note: Homebrew cask `appium-inspector` is Gatekeeper-disabled upstream; Touch ID sudo PAM left off on macOS 26.
 
-First apply (after Nix is installed and `identity.local.nix` exists):
+First apply (after Nix is installed):
 
 ```bash
 cd ~/.config/nix
-sudo nix run nix-darwin -- switch --flake ~/.config/nix#$(./scripts/identity-host.sh)
+sudo nix run nix-darwin -- switch --flake ~/.config/nix#$(scutil --get LocalHostName)
 ```
 
 Later applies:
@@ -225,14 +225,14 @@ Later applies:
 ```bash
 ~/.config/nix/scripts/nix-switch.sh
 # or
-sudo darwin-rebuild switch --flake ~/.config/nix#$(~/.config/nix/scripts/identity-host.sh)
+sudo darwin-rebuild switch --flake ~/.config/nix#$(scutil --get LocalHostName)
 ```
 
 Smoke-check after switch: `docker`, `op`, `lean-ctx`, and your Appium/FVM paths. `aws` / Helix should be absent unless those features are enabled.
 
 ## Recommended default order (if unsure)
 
-1. Fix `identity.local.nix` (`primaryUser` / `hostName` / `sshPrivateKeys`).
+1. Fix `hosts/<name>/identity.nix` and `flake.nix` `hostNames`.
 2. Mark DevOps CLIs and OrbStack Include boxes only if you use AWS/Docker daily.
 3. Leave Claude unchecked to keep npm unless you want the brew cask.
 4. Skip Helix/WezTerm/Probhat until you deliberately switch editors or keyboard layout.
@@ -243,7 +243,7 @@ Smoke-check after switch: `docker`, `op`, `lean-ctx`, and your Appium/FVM paths.
 
 | Topic | Your file | Reference file |
 | --- | --- | --- |
-| Flake inputs / identity | `flake.nix`, `identity.local.nix` (tracked separately from flake.nix), `identity.example.nix` | `flake.nix` |
+| Flake inputs / identity | `flake.nix`, `hosts/<name>/identity.nix` | `flake.nix` |
 | Nix packages | `home/packages.nix` | `home/packages.nix` |
 | Homebrew | `darwin/homebrew.nix` | `darwin/homebrew.nix` |
 | Darwin system | `darwin/default.nix` | `darwin/default.nix` |

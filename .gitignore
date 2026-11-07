@@ -5,6 +5,9 @@
 result
 result-*
 
+# Leftover local identity experiment (unused; per-host identity is under hosts/)
+identity.local.nix
+
 # Editors
 .vscode/
 *.swp
