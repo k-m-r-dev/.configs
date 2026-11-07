@@ -1,11 +1,33 @@
-{ pkgs, config, ... }:
+{ pkgs, pkgsMaster, lib, config, sshPrivateKeys, ... }:
+let
+  # Basename-only keys (validated in flake); keep $HOME expandable at shell runtime.
+  sshKeyPaths = lib.concatMapStringsSep " " (name: ''"$HOME/.ssh/${name}"'') sshPrivateKeys;
+in
 {
+  home.sessionPath = [ "$HOME/.local/bin" ];
+
+  programs.direnv = {
+    enable = true;
+    enableZshIntegration = true;
+    package = pkgsMaster.direnv;
+    nix-direnv.enable = true;
+  };
+
+  programs.zoxide = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+
   programs.zsh = {
     enable = true;
     dotDir = "${config.xdg.configHome}/zsh";
     enableCompletion = true;
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
+
+    sessionVariables = lib.mkIf config.my.features.awscli.enable {
+      AWS_PAGER = "";
+    };
 
     initContent = ''
       # Source .profile if it exists (for environment variables set in bash profile)
@@ -14,9 +36,16 @@
       # GPG configuration
       export GPG_TTY=$(tty)
 
-      # Start ssh-agent and add GitHub key if not running/present
-      if ! ssh-add -l > /dev/null; then
-        ssh-add --apple-use-keychain ~/.ssh/id_ed25519_fn
+      # Load a default SSH key into the agent when present (skip quietly if missing)
+      # Key basenames come from identity.local.nix (sshPrivateKeys).
+      if ! ssh-add -l >/dev/null 2>&1; then
+        for _ssh_key in ${sshKeyPaths}; do
+          if [ -f "$_ssh_key" ]; then
+            ssh-add --apple-use-keychain "$_ssh_key" 2>/dev/null || true
+            break
+          fi
+        done
+        unset _ssh_key
       fi
 
       # Load fnm (Fast Node Manager)
@@ -122,7 +151,7 @@
     shellAliases = {
       la = "ls -la";
       ".." = "cd ..";
-      "nix-switch" = "sudo darwin-rebuild switch --flake ~/.config/nix";
+      "nix-switch" = "bash ~/.config/nix/scripts/nix-switch.sh";
       libreoffice = "soffice";
       bundletool = "java -jar /opt/homebrew/opt/bundletool/libexec/bundletool-all.jar";
       setup = "$SETUP_PATH";
@@ -130,7 +159,7 @@
 
     oh-my-zsh = {
       enable = true;
-      plugins = [ "git" "zoxide" "direnv" "aws" "react-native" "flutter" ];
+      plugins = [ "git" "aws" "react-native" "flutter" ];
       theme = "eastwood";
     };
   };

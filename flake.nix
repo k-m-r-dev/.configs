@@ -27,9 +27,8 @@
       ...
     }@inputs:
     let
-      # TODO: replace with your username
-      primaryUser = "khandkermahmudur";
-      hostName = "kmrfn";
+      primaryUser = "mahmudur";
+      hostName = "k-m-r-dev";
     in
     {
       # build darwin flake using:
@@ -38,7 +37,7 @@
         system = "aarch64-darwin";
         modules = [
           ./darwin
-          ./hosts/kmrfn/configuration.nix
+          ./hosts/k-m-r-dev/configuration.nix
         ];
         specialArgs = { inherit inputs self primaryUser hostName; };
       };

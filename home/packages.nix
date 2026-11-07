@@ -1,65 +1,67 @@
-{ pkgs, pkgsMaster, lib, ... }: # lib used for lib.hiPrio
+{ pkgs, pkgsMaster, lib, config, ... }: # lib used for lib.hiPrio
 {
   home = {
-    packages = with pkgs; [
-      # dev tools
-      curl
-      neovim
-      # helix
-      # zellij
-      btop
-      tree
-      ripgrep
-      zoxide
-      direnv
-      kubectl
-      mysql84
+    packages =
+      with pkgs;
+      [
+        # always-on tools
+        curl
+        neovim
+        btop
+        tree
+        ripgrep
+        kubectl
+        mysql84
 
-      # LLM CLIs
-      pkgsMaster.opencode
-      pkgsMaster.gemini-cli
+        # LLM CLIs
+        pkgsMaster.opencode
+        pkgsMaster.gemini-cli
 
-      # languages runtimes
-      uv
-      nodejs_24
-      dart
-      php82
-      rustc
-      cargo
-      rustfmt
-      clippy
+        # languages runtimes
+        uv
+        nodejs_24
+        dart
+        php82
+        # rustc/cargo/rustfmt/clippy come from rustup when enabled (avoid PATH conflicts)
 
-      # fonts
-      nerd-fonts.monaspace
+        # fonts
+        nerd-fonts.monaspace
 
-      # SDK nixpackage managers
-      fnm
-      fvm
+        # SDK nixpackage managers
+        fnm
+        fvm
 
-      # npm global CLIs managed via activation.npmGlobals below
+        # Apple development
+        cocoapods
 
-      # Python tool runners (pipx managed via Homebrew due to nixpkgs build failure)
+        # Screen recording
+        ffmpeg
+        libreoffice-bin
 
-      # Apple development
-      cocoapods
-      
-      # iOS deployment is installed via Homebrew (nixpkgs build hits impure host deps on macOS)
+        # Google Cloud
+        google-cloud-sdk
 
-      # iOS location simulation handled via Homebrew tap
+        k9s
 
-      # Screen recording
-      ffmpeg
-      libreoffice-bin
-
-      # Google Cloud
-      google-cloud-sdk
-
-      k9s
-
-      # JDK versions (zulu17 is default — zulu11 available via use-java 11)
-      (lib.hiPrio zulu17)
-      zulu11
-    ];
+        # JDK versions (zulu17 is default — zulu11 available via use-java 11)
+        (lib.hiPrio zulu17)
+        zulu11
+      ]
+      ++ lib.optionals config.my.features.helix.enable [ helix ]
+      ++ lib.optionals config.my.features.zellij.enable [ zellij ]
+      ++ lib.optionals config.my.features.dockerClient.enable [ docker-client ]
+      ++ lib.optionals config.my.features.onePasswordCli.enable [ _1password-cli ]
+      ++ lib.optionals config.my.features.awscli.enable [
+        awscli2
+        aws-iam-authenticator
+      ]
+      ++ lib.optionals config.my.features.rustup.enable [ rustup ]
+      ++ lib.optionals (!config.my.features.rustup.enable) [
+        rustc
+        cargo
+        rustfmt
+        clippy
+      ];
 
     # Global CLI packages not available in nixpkgs — managed via activation hook
     activation.npmGlobals = lib.hm.dag.entryAfter [ "installPackages" ] ''
@@ -117,8 +119,7 @@
         # @opengsd/gsd-pi — keep at npm latest; remove and reinstall if outdated
         # npm_ensure_latest @opengsd/gsd-pi
 
-        # claude-code — keep at npm latest
-        npm_ensure_latest @anthropic-ai/claude-code
+        # claude-code — moved to Homebrew cask in darwin/homebrew.nix
 
         # eas-cli — managed here (not nixpkgs) to always track npm latest
         npm_ensure_latest eas-cli

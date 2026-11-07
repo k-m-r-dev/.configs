@@ -3,10 +3,13 @@
   inputs,
   self,
   primaryUser,
+  config,
+  lib,
   ...
 }:
 {
   imports = [
+    ../modules/features.nix
     ./homebrew.nix
     ./settings.nix
     inputs.home-manager.darwinModules.home-manager
@@ -39,11 +42,16 @@
     useGlobalPkgs = true;
     useUserPackages = true;
     backupFileExtension = "backup";
-    users.${primaryUser} = {
-      imports = [
-        ../home
-      ];
-    };
+    sharedModules = [ ../modules/features.nix ];
+    users.${primaryUser} = lib.mkMerge [
+      {
+        imports = [ ../home ];
+      }
+      {
+        # Mirror darwin feature flags into Home Manager config
+        my.features = lib.mapAttrs (_: v: { enable = v.enable; }) config.my.features;
+      }
+    ];
     extraSpecialArgs = {
       inherit inputs self primaryUser;
       pkgsMaster = import inputs.nixpkgs-master {
@@ -62,6 +70,7 @@
   environment = {
     systemPath = [
       "/opt/homebrew/bin"
+      "/Applications/Docker.app/Contents/Resources/bin" # docker-credential-desktop
     ];
     pathsToLink = [ "/Applications" ];
   };

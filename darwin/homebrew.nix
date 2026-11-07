@@ -1,4 +1,7 @@
-{ ... }:
+{ lib, config, ... }:
+let
+  f = config.my.features;
+in
 {
   homebrew = {
     enable = true;
@@ -12,69 +15,42 @@
       cleanup = "uninstall"; # was "zap" — downgraded to avoid removing manually-installed casks
     };
 
-    # caskArgs.no_quarantine = true;
-    # global.brewfile = true;
-
     # homebrew is best for GUI apps
     # nixpkgs is best for CLI tools
-    casks = [
-      # OS enhancements
-      # "aerospace"
-      # "cleanshot"
-      # "hiddenbar"
-      # "raycast"
-      # "betterdisplay"
+    casks =
+      [
+        # always-on / project casks
+        # "github-copilot-for-xcode"
+        # "appium-inspector" — Homebrew disabled (Gatekeeper) on 2026-09-01; install manually if needed
+        # "wizcli"
+      ]
+      ++ lib.optionals f.betterdisplay.enable [ "betterdisplay" ]
+      ++ lib.optionals f.orbstack.enable [ "orbstack" ]
+      ++ lib.optionals f.claudeCode.enable [ "claude-code" ];
 
-      # dev
-      # "cursor"
-      # "ghostty"
-      # "visual-studio-code"
-      # "wezterm" -- incompatible with nix-homebrew patched brew 4.5.6; install manually: brew install --cask wezterm
-      # "zed"
-      "github-copilot-for-xcode"
+    brews =
+      [
+        "bun"
+        "ollama"
+        "sops"
+        "pipx"
+        "ios-deploy"
+        "watchman"
+        "wix/brew/applesimutils"
+        "lyft/formulae/set-simulator-location"
+        "facebook/fb/idb-companion"
+        "bundletool"
+        "gstreamer"
+        "gst-plugins-base"
+      ]
+      ++ lib.optionals f.leanCtx.enable [ "yvgude/lean-ctx/lean-ctx" ];
 
-      # messaging
-      # "discord"
-      # "slack"
-      # "signal"
-
-      # mobile testing
-      "appium-inspector"
-      "wizcli"
-
-      # other
-      # Java (Azul Zulu JDK 17) -- incompatible with nix-homebrew patched brew 4.5.6; install manually: brew install --cask zulu@17
-      # "zulu@17"
-      # "1password"
-      # "anki"
-      # "brave-browser"
-      # "obsidian"
-      # "protonvpn"
-      # "spotify"
-      # "thebrowsercompany-dia"
-      # "zen"
-    ];
-    brews = [
-      # "docker"
-      # "colima"
-      "bun"
-      "ollama"
-      "sops"
-      "pipx"
-      "ios-deploy"
-      "watchman"
-      "wix/brew/applesimutils"
-      "lyft/formulae/set-simulator-location"
-      "facebook/fb/idb-companion"
-      "bundletool"
-      "gstreamer"
-      "gst-plugins-base"
-    ];
-    taps = [
-      # "nikitabobko/tap"
-      "wix/brew"
-      "lyft/formulae"
-      "facebook/fb"
-    ];
+    taps =
+      [
+        "wix/brew"
+        "lyft/formulae"
+        "facebook/fb"
+      ]
+      ++ lib.optionals f.leanCtx.enable [ "yvgude/lean-ctx" ];
   };
 }
