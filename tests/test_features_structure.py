@@ -30,6 +30,8 @@ def main() -> int:
     brew = read("darwin/homebrew.nix")
     assert "config.my.features" in brew
     assert "lib.optionals" in brew
+    assert '"claude-code@latest"' in brew
+    assert '"claude-code"' not in brew  # stable cask must not be declared alongside @latest
 
     print("test_features_structure: ok")
     return 0

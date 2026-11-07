@@ -119,7 +119,7 @@
         # @opengsd/gsd-pi — keep at npm latest; remove and reinstall if outdated
         # npm_ensure_latest @opengsd/gsd-pi
 
-        # claude-code — moved to Homebrew cask in darwin/homebrew.nix
+        # claude-code — moved to Homebrew cask claude-code@latest in darwin/homebrew.nix
 
         # eas-cli — managed here (not nixpkgs) to always track npm latest
         npm_ensure_latest eas-cli

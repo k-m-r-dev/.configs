@@ -31,7 +31,9 @@
       enable = lib.mkEnableOption "OrbStack Homebrew cask" // { default = true; };
     };
     claudeCode = {
-      enable = lib.mkEnableOption "Claude Code Homebrew cask" // { default = true; };
+      enable = lib.mkEnableOption "Claude Code Homebrew cask (claude-code@latest)" // {
+        default = true;
+      };
     };
     leanCtx = {
       enable = lib.mkEnableOption "LeanCTX Homebrew tap + brew" // { default = true; };

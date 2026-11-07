@@ -26,7 +26,7 @@ in
       ]
       ++ lib.optionals f.betterdisplay.enable [ "betterdisplay" ]
       ++ lib.optionals f.orbstack.enable [ "orbstack" ]
-      ++ lib.optionals f.claudeCode.enable [ "claude-code" ];
+      ++ lib.optionals f.claudeCode.enable [ "claude-code@latest" ];
 
     brews =
       [
