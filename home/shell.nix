@@ -93,7 +93,7 @@ in
       fi
 
       # Added by Antigravity
-      export PATH="/Users/khandkermahmudur/.antigravity/antigravity/bin:$PATH"
+      export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
 
       # JDK paths (baked in by Nix at build time)
       export JAVA_HOME_11="${pkgs.zulu11}"
