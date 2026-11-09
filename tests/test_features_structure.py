@@ -27,6 +27,10 @@ def main() -> int:
     assert "# awscli2" not in packages  # must not rely on comment toggles
     assert "awscli2" in packages
 
+    shell = read("home/shell.nix")
+    assert 'home.file.".op_utils.zsh".source = ./op_utils.zsh;' in shell
+    assert 'source "$HOME/.op_utils.zsh"' in shell
+
     brew = read("darwin/homebrew.nix")
     assert "config.my.features" in brew
     assert "lib.optionals" in brew

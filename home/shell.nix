@@ -5,6 +5,7 @@ let
 in
 {
   home.sessionPath = [ "$HOME/.local/bin" ];
+  home.file.".op_utils.zsh".source = ./op_utils.zsh;
 
   programs.direnv = {
     enable = true;
@@ -69,6 +70,9 @@ in
 
       # Source NPM Utils, which set NPM token for FN private registry
       [[ -f "$HOME/.npm_utils.zsh" ]] && source "$HOME/.npm_utils.zsh"
+
+      # Source generic 1Password item lookup helper
+      [[ -f "$HOME/.op_utils.zsh" ]] && source "$HOME/.op_utils.zsh"
 
       # Source TDG token helper for CF Access credentials
       [[ -f "$HOME/.tdg_token.zsh" ]] && source "$HOME/.tdg_token.zsh"
