@@ -1,8 +1,8 @@
 # Fetch a 1Password item by name or ID.
-# Usage: op_get_item ITEM [--vault VAULT] [--account ACCOUNT] [--format FORMAT]
+# Usage: op_get_item ITEM [--vault VAULT] [--account ACCOUNT] [--format FORMAT] [--field FIELD]
 op_get_item() {
   if (( $# == 0 )); then
-    print -u2 "Usage: op_get_item ITEM [--vault VAULT] [--account ACCOUNT] [--format FORMAT]"
+    print -u2 "Usage: op_get_item ITEM [--vault VAULT] [--account ACCOUNT] [--format FORMAT] [--field FIELD]"
     return 2
   fi
 
@@ -11,6 +11,7 @@ op_get_item() {
   local format="json"
   local vault=""
   local account=""
+  local field=""
 
   while (( $# > 0 )); do
     case "$1" in
@@ -38,6 +39,14 @@ op_get_item() {
         format="$2"
         shift 2
         ;;
+      --field)
+        if (( $# < 2 )); then
+          print -u2 "Missing value for --field"
+          return 2
+        fi
+        field="$2"
+        shift 2
+        ;;
       *)
         print -u2 "Unknown option: $1"
         return 2
@@ -54,5 +63,25 @@ op_get_item() {
   [[ -n "$vault" ]] && op_args+=(--vault "$vault")
   [[ -n "$account" ]] && op_args+=(--account "$account")
 
-  command op "${op_args[@]}"
+  if [[ -z "$field" ]]; then
+    command op "${op_args[@]}"
+    return $?
+  fi
+
+  if ! command -v jq >/dev/null 2>&1; then
+    print -u2 "Missing dependency: jq (required for --field)"
+    return 127
+  fi
+
+  setopt local_options PIPE_FAIL
+  command op "${op_args[@]}" | command jq -r --arg field "$field" '
+    [(.fields // [])[] | select(.id == $field or .label == $field)] as $matches
+    | if ($matches | length) != 1 then
+        error("expected exactly one matching field")
+      elif (($matches[0] | has("value")) | not) then
+        error("matching field has no value")
+      else
+        $matches[0].value
+      end
+  '
 }

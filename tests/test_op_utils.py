@@ -14,20 +14,22 @@ HELPER = ROOT / "home" / "op_utils.zsh"
 
 @unittest.skipUnless(shutil.which("zsh"), "zsh is required")
 class OpUtilsTests(unittest.TestCase):
-    def run_helper(self, item, *options, op_exit=0):
+    def run_helper(self, item, *options, op_exit=0, op_output=None):
         with tempfile.TemporaryDirectory() as temp_dir:
             fake_bin = Path(temp_dir)
             fake_op = fake_bin / "op"
             fake_op.write_text(
                 "#!/usr/bin/env python3\n"
                 "import json, os, sys\n"
-                "print(json.dumps(sys.argv[1:]))\n"
+                "print(os.environ.get('FAKE_OP_OUTPUT', json.dumps(sys.argv[1:])))\n"
                 "sys.exit(int(os.environ.get('FAKE_OP_EXIT', '0')))\n"
             )
             fake_op.chmod(0o755)
             env = os.environ.copy()
             env["PATH"] = f"{fake_bin}:{env['PATH']}"
             env["FAKE_OP_EXIT"] = str(op_exit)
+            if op_output is not None:
+                env["FAKE_OP_OUTPUT"] = op_output
             return subprocess.run(
                 [
                     "zsh",
@@ -84,6 +86,43 @@ class OpUtilsTests(unittest.TestCase):
         result = self.run_helper("NPM ReadOnly Token", op_exit=42)
 
         self.assertEqual(result.returncode, 42)
+
+    @unittest.skipUnless(shutil.which("jq"), "jq is required")
+    def test_extracts_field_by_id_or_label(self):
+        item = {
+            "fields": [
+                {"id": "password", "label": "password", "value": "test-secret"}
+            ]
+        }
+        result = self.run_helper(
+            "DD API Key",
+            "--vault",
+            "Engineering Vault",
+            "--field",
+            "password",
+            op_output=json.dumps(item),
+        )
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(result.stdout, "test-secret\n")
+
+    @unittest.skipUnless(shutil.which("jq"), "jq is required")
+    def test_rejects_ambiguous_field_match(self):
+        item = {
+            "fields": [
+                {"id": "password1", "label": "password", "value": "one"},
+                {"id": "password2", "label": "password", "value": "two"},
+            ]
+        }
+        result = self.run_helper(
+            "DD API Key",
+            "--field",
+            "password",
+            op_output=json.dumps(item),
+        )
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("expected exactly one matching field", result.stderr)
 
 
 if __name__ == "__main__":

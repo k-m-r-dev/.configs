@@ -45,7 +45,18 @@ The output format defaults to JSON. You can also pass a format accepted by `op i
 op_get_item "ITEM_NAME" --format json
 ```
 
-The helper prints the complete item. It does not extract a field or export a value as an environment variable. Treat the output as sensitive because it may contain passwords, tokens, or other credentials.
+Without `--field`, the helper prints the complete item. It does not export a value as an environment variable. Treat the output as sensitive because it may contain passwords, tokens, or other credentials.
+
+## Fetch a field value
+
+Pass `--field` with the field ID or label to print only that field's value. The helper requires exactly one match. This option requires `jq`; fetching the complete item does not.
+
+```zsh
+op_get_item "DD API Key" --vault "Engineering Vault" --field password
+op_get_item "AMPLITUDE_KEY_PROD" --vault "Engineering Vault" --field "New Api Key"
+```
+
+String values print as text. Structured values print as JSON. Treat the output as sensitive.
 
 ## Use with Home Manager
 
