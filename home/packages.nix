@@ -9,6 +9,7 @@
         neovim
         btop
         tree
+        eza
         ripgrep
         kubectl
         mysql84
