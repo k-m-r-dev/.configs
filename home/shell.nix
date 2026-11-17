@@ -6,6 +6,7 @@ in
 {
   home.sessionPath = [ "$HOME/.local/bin" ];
   home.file.".op_utils.zsh".source = ./op_utils.zsh;
+  home.file.".git_identity.zsh".source = ./git_identity.zsh;
 
   programs.direnv = {
     enable = true;
@@ -73,6 +74,9 @@ in
 
       # Source generic 1Password item lookup helper
       [[ -f "$HOME/.op_utils.zsh" ]] && source "$HOME/.op_utils.zsh"
+
+      # git-identity: Git identity + session GH_TOKEN
+      [[ -f "$HOME/.git_identity.zsh" ]] && source "$HOME/.git_identity.zsh"
 
       # Source TDG token helper for CF Access credentials
       [[ -f "$HOME/.tdg_token.zsh" ]] && source "$HOME/.tdg_token.zsh"
