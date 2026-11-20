@@ -10,6 +10,7 @@
         btop
         tree
         eza
+        yazi
         ripgrep
         kubectl
         mysql84

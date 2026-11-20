@@ -160,6 +160,8 @@ in
       la = "ls -la";
       ".." = "cd ..";
       "nix-switch" = "bash ~/.config/nix/scripts/nix-switch.sh";
+      ezl = "eza --color always -la --git -g --header --icons";
+      ezt = "eza --color always --tree --git -g --header --icons";
       libreoffice = "soffice";
       bundletool = "java -jar /opt/homebrew/opt/bundletool/libexec/bundletool-all.jar";
       setup = "$SETUP_PATH";
